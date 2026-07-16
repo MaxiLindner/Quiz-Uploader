@@ -1,0 +1,292 @@
+/* Quiz Automation — "study desk" system
+   Cards laid out like index cards on a desk: the site's own subject
+   (flashcards, ruled paper, numbered study sections) is the design. */
+
+:root {
+    --desk: #2e2620;
+    --desk-deep: #1c1712;
+    --desk-grain: #362d25;
+    --card: #fbf6ec;
+    --card-line: #e4d8be;
+    --ink: #2a2118;
+    --ink-soft: #6b5d4b;
+    --marker: #ff5a36;
+    --marker-dim: #c94322;
+    --correct: #3fa796;
+
+    --font-display: "Avenir Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --font-body: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    --font-mono: "SF Mono", "Cascadia Code", Consolas, "Liberation Mono", monospace;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--desk);
+    background-image:
+        repeating-linear-gradient(135deg, var(--desk-grain) 0px, var(--desk-grain) 1px, transparent 1px, transparent 44px),
+        radial-gradient(ellipse at 50% -10%, #4a3c30 0%, transparent 60%);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    padding: 4rem 1.25rem 5rem;
+}
+
+.stack {
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+/* --- Tab navigation: folder tabs clipped to the card underneath --- */
+
+.tabs {
+    display: flex;
+    gap: 0.4rem;
+    padding: 0 0.75rem;
+    margin: 0;
+}
+
+.tab {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #cfc3ae;
+    background: #3a2f26;
+    padding: 0.65rem 1.1rem 0.5rem;
+    border-radius: 8px 8px 0 0;
+    border: 1px solid var(--desk-deep);
+    border-bottom: none;
+    transform: translateY(3px);
+    transition: transform 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+
+.tab:hover {
+    color: var(--card);
+    transform: translateY(0);
+}
+
+.tab:focus-visible {
+    outline: 2px solid var(--marker);
+    outline-offset: 2px;
+}
+
+.tab.is-active {
+    background: var(--card);
+    color: var(--marker-dim);
+    border-color: var(--card-line);
+    transform: translateY(0);
+    font-weight: 700;
+}
+
+/* --- Card: the index card itself --- */
+
+.card {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--card-line);
+    border-radius: 0 10px 10px 10px;
+    padding: 3rem 2.75rem 2.5rem;
+    box-shadow:
+        0 1px 0 #fff inset,
+        0 22px 45px -20px rgba(0, 0, 0, 0.65),
+        0 8px 0 -4px #e9dfc8,
+        0 8px 2px -4px rgba(0, 0, 0, 0.2),
+        0 16px 0 -8px #ddd0b1,
+        0 16px 3px -8px rgba(0, 0, 0, 0.18);
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 2.05rem,
+        var(--card-line) 2.05rem,
+        var(--card-line) calc(2.05rem + 1px)
+    );
+    background-position: 0 8.5rem;
+    animation: settle 0.5s ease-out;
+}
+
+@keyframes settle {
+    from {
+        opacity: 0;
+        transform: translateY(10px) rotate(-0.4deg);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) rotate(0);
+    }
+}
+
+.tape {
+    position: absolute;
+    top: -1.1rem;
+    left: 50%;
+    width: 5.5rem;
+    height: 1.9rem;
+    background: linear-gradient(#efe0c0cc, #e6d3a9cc);
+    border: 1px solid #d8c398aa;
+    transform: translateX(-50%) rotate(-2.5deg);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+}
+
+/* --- Type --- */
+
+.eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--marker-dim);
+    margin: 0 0 0.6rem;
+}
+
+h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 5vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin: 0 0 1.1rem;
+    color: var(--ink);
+}
+
+h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 2.1rem 0 0.6rem;
+    color: var(--ink);
+}
+
+h2 .num {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--correct);
+    flex: none;
+}
+
+.card > h2:first-of-type {
+    margin-top: 1.6rem;
+}
+
+p {
+    margin: 0 0 1rem;
+    color: var(--ink);
+}
+
+p.lede {
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+}
+
+.meta {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    margin: -0.4rem 0 1.6rem;
+}
+
+a {
+    color: var(--marker-dim);
+}
+
+a:focus-visible {
+    outline: 2px solid var(--marker);
+    outline-offset: 2px;
+}
+
+.card :not(.links) > a {
+    color: var(--marker-dim);
+    text-decoration-color: var(--marker);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+}
+
+/* --- Buttons / link list on the homepage --- */
+
+.links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.8rem;
+}
+
+.link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.92rem;
+    text-decoration: none;
+    color: var(--card);
+    background: var(--marker);
+    padding: 0.7rem 1.15rem;
+    border-radius: 6px;
+    box-shadow: 0 3px 0 var(--marker-dim);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.link-btn:hover {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 var(--marker-dim);
+}
+
+.link-btn span {
+    transition: transform 0.12s ease;
+}
+
+.link-btn:hover span {
+    transform: translateX(2px);
+}
+
+.back {
+    display: inline-block;
+    margin-top: 2.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+}
+
+.back:hover {
+    color: var(--marker-dim);
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 2.5rem 0.9rem 3.5rem;
+    }
+
+    .card {
+        padding: 2.6rem 1.5rem 2rem;
+    }
+
+    .tab {
+        padding: 0.55rem 0.7rem 0.45rem;
+        font-size: 0.7rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card {
+        animation: none;
+    }
+
+    .tab, .link-btn, .link-btn span, .back {
+        transition: none;
+    }
+}
